@@ -101,7 +101,7 @@
 
 (setq tab-width 2)
 
-(set-default-font "Consolas-13")
+(set-default-font "Inconsolata-14")
 
 (setq-default cursor-type 'hbar)
 
