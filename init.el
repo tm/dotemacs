@@ -153,6 +153,7 @@
 (setq ido-enable-flex-matching t
       ido-use-filename-at-point nil
       ido-auto-merge-work-directories-length 0
+      ; ido-auto-merge-delay-time 9
       ido-use-virtual-buffers t)
 
 (setq ido-default-buffer-method 'selected-window)
@@ -210,7 +211,8 @@
 
 
                                         ; aspell
-(setq ispell-program-name "aspell")
+(setq ispell-program-name "aspell"
+      ispell-dictionary "polish")
 
                                         ; magit
 (global-set-key (kbd "C-x g") 'magit-status)
@@ -227,7 +229,8 @@
 (global-set-key (kbd "C-c a") 'org-agenda)
 (setq org-agenda-show-log t
       org-agenda-todo-ignore-scheduled t
-      org-agenda-todo-ignore-deadlines t)
+      org-agenda-todo-ignore-deadlines t
+      org-agenda-start-on-weekday 0)
 (setq org-agenda-files (list "~/Dropbox/org/personal.org"
                              "~/Dropbox/org/groupon.org"))
 
@@ -323,4 +326,27 @@
 (global-git-gutter-mode +1)
 
                                         ; custom set variables
-(custom-set-variables '(coffee-tab-width 2))
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(coffee-tab-width 2)
+ '(org-agenda-files
+   (quote
+    ("~/Dropbox/org/personal.org" "~/Dropbox/org/groupon.org"))))
+
+                                        ; AUCTeX
+(setq TeX-auto-save t)
+(setq TeX-parse-self t)
+(setq-default TeX-master nil)
+(add-hook 'LaTeX-mode-hook 'turn-on-reftex)
+
+                                        ; yasnippet
+(setq yas/indent-line 'fixed)
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
