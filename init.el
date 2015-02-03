@@ -6,7 +6,7 @@
 
 (add-to-list 'load-path "~/.emacs.d/elisp")
 
-                                        ; packages
+;;; packages
 
 (load "package")
 (package-initialize)
@@ -63,8 +63,7 @@
 
 
 
-                                        ; editor setup
-
+;;; editor setup
 
 (if window-system
     (x-focus-frame nil))
@@ -122,7 +121,6 @@
 (setq mouse-wheel-follow-mouse 't) ;; scroll window under mouse
 (setq scroll-step 1) ;; keyboard scroll one line at a time
 
-
 (setq echo-keystrokes 0.1
       use-dialog-box nil
       visible-bell t)
@@ -131,6 +129,12 @@
 
 (defalias 'yes-or-no-p 'y-or-n-p)
 
+(setq uniquify-buffer-name-style 'forward)
+
+(setq require-final-newline t)
+
+
+;; Global keybindings
 (global-set-key (kbd "C-;") 'comment-or-uncomment-region)
 (global-set-key (kbd "M-/") 'hippie-expand)
 (define-key global-map (kbd "RET") 'newline-and-indent)
@@ -143,12 +147,7 @@
 (global-set-key (kbd "C-M-r") 'isearch-backward)
 
 
-(setq uniquify-buffer-name-style 'forward)
-
-(setq require-final-newline t)
-
-
-                                        ; ido
+;;; ido
 (ido-mode t)
 (ido-everywhere t)
 (setq ido-enable-flex-matching t
@@ -169,16 +168,12 @@
 (add-hook 'ido-setup-hook 'ido-define-keys)
 
 
-                                        ; tildify
-(setq tildify-pattern-alist
-      '((t "\\([,:;(][ \t]*[a]\\|\\<[AOIUWZaoiuwz]\\)\\([ \t]+\\|[ \t]*\n[ \t]*\\)\\(\\w\\|[([{\\]\\|<[a-zA-Z]\\)" 2)))
-
-                                        ; css
+;;; css
 (setq css-indent-offset 2)
 (add-hook 'css-mode-hook '(lambda ()
                             (local-set-key (kbd "RET") 'newline-and-indent)))
 
-                                        ; calendar setup
+;;; calendar setup
 (setq calendar-week-start-day 0
       calendar-day-name-array ["niedziela" "poniedziałek" "wtorek" "środa"
                                "czwartek" "piątek" "sobota"]
@@ -186,7 +181,7 @@
                                  "czerwiec" "lipiec" "sierpień" "wrzesień"
                                  "październik" "listopad" "grudzień"])
 
-                                        ; ruby-mode
+;;; ruby-mode
 (add-hook 'ruby-mode-hook
           '(lambda ()
              (define-key ruby-mode-map (kbd "RET") 'reindent-then-newline-and-indent)
@@ -201,7 +196,7 @@
 (add-to-list 'auto-mode-alist '("Capfile$" . ruby-mode))
 (add-to-list 'auto-mode-alist '("Vagrantfile$" . ruby-mode))
 
-                                        ;Textmate like Command-RET
+;;;Textmate like Command-RET
 (defun tm-mate-command-return ()
   "TextMate like Command-RET"
   (interactive)
@@ -211,11 +206,11 @@
 (global-set-key (kbd "M-RET") 'tm-mate-command-return)
 
 
-                                        ; aspell
+;;; aspell
 (setq ispell-program-name "aspell"
       ispell-dictionary "polish")
 
-                                        ; magit
+;;; magit
 (global-set-key (kbd "C-x g") 'magit-status)
 
 
@@ -236,17 +231,18 @@
                              "~/Dropbox/org/groupon.org"))
 
 
-                                        ; smex
+
+;;; smex
 (setq smex-save-file (expand-file-name ".smex-items" user-emacs-directory))
 (smex-initialize)
 (global-set-key (kbd "M-x") 'smex)
 (global-set-key (kbd "M-X") 'smex-major-mode-commands)
 
-                                        ; auto-complete
-;(ac-config-default)
+;;; auto-complete
+(ac-config-default)
 
 
-                                        ; indentation and buffer clenaup
+;;; indentation and buffer clenaup
 
 (defun untabify-buffer ()
   (interactive)
@@ -274,15 +270,15 @@
 
 
 
-                                        ; rvm
+;;; rvm
 (rvm-use-default)
 
-                                        ; yaml
+;;; yaml
 (add-to-list 'auto-mode-alist '("\\.yml$" . yaml-mode))
 (add-to-list 'auto-mode-alist '("\\.yaml$" . yaml-mode))
 
 
-                                        ; js2-mode
+;;; js2-mode
 (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
 
 (setq js2-mode-hook
@@ -290,18 +286,17 @@
                     (set-variable 'js2-basic-offset 2))))
 
 
-                                        ; neotree
+;;; neotree
 (global-set-key [f8] 'neotree-toggle)
 
-                                        ; projectile
+;;; projectile
 (projectile-global-mode)
 
-                                        ; projectile-rails
+;; projectile-rails
 (add-hook 'projectile-mode-hook 'projectile-rails-on)
 
 
-                                        ; markdown
-
+;;; markdown
 (defun markdown-preview-file ()
   "use Marked 2 to preview the current file"
   (interactive)
@@ -311,13 +306,12 @@
   )
 (global-set-key "\C-cm" 'markdown-preview-file)
 
-                                        ; macro
-;; macros
+;;; macros
 (global-set-key [f10]  'start-kbd-macro)
 (global-set-key [f11]  'end-kbd-macro)
 (global-set-key [f12]  'call-last-kbd-macro)
 
-                                        ; git-gutter
+;;; git-gutter
 (global-git-gutter-mode +1)
 
                                         ; custom set variables
@@ -326,17 +320,19 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(coffee-tab-width 2)
- '(org-agenda-files
-   (quote
-    ("~/Dropbox/org/personal.org" "~/Dropbox/org/groupon.org"))))
+ '(coffee-tab-width 2))
 
 
 ;;; sierotki.el
 (require 'sierotki)
 (turn-on-tex-magic-space-in-tex-modes)
 
-                                        ; AUCTeX
+
+;;; tildify
+(setq tildify-pattern-alist
+      '((t "\\([,:;(][ \t]*[a]\\|\\<[AOIUWZaoiuwz]\\)\\([ \t]+\\|[ \t]*\n[ \t]*\\)\\(\\w\\|[([{\\]\\|<[a-zA-Z]\\)" 2)))
+
+;;; AUCTeX
 (setq TeX-auto-save t)
 (setq TeX-parse-self t)
 (setq-default TeX-master nil)
@@ -347,8 +343,7 @@
                   TeX-run-command nil nil) t))
 
 
-                                        ; Skim.app
-
+;;; Skim.app
 (setq LaTeX-command "latex -synctex=1")
 
 (setq TeX-view-program-selection '((output-pdf "PDF Viewer")))
@@ -357,15 +352,15 @@
 
 
 
-                                        ; yasnippet
+;;; yasnippet
 (setq yas/indent-line 'fixed)
 
 
-                                        ; expand-region
+;;; expand-region
 (global-set-key (kbd "C-=") 'er/expand-region)
 
 
-; undo-tree
+;;; undo-tree
 ;(global-undo-tree-mode 1)
 (defalias 'redo 'undo-tree-redo)
 (global-set-key (kbd "M-z") 'undo) ; 【Ctrl+z】
