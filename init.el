@@ -18,14 +18,12 @@
 (setq package-archive-enable-alist '(("melpa" deft magit)))
 
 
-(defvar tm/packages '(ace-jump-mode
-                      ac-slime
-                      auctex
+(defvar tm/packages '(auctex
                       auto-complete
-                      autopair
                       coffee-mode
                       color-theme-solarized
                       emmet-mode
+                      expand-region
                       flycheck
                       gist
                       git-gutter
@@ -37,14 +35,15 @@
                       markdown-mode
                       neotree
                       org
-                      paredit
                       projectile
                       projectile-rails
                       reftex
                       restclient
                       rvm
                       slim-mode
+                      smartparens
                       smex
+                      undo-tree
                       yaml-mode
                       yasnippet)
   "Default packages")
@@ -96,6 +95,8 @@
 (setq make-backup-files nil)
 
 (setq auto-save-default nil)
+
+(setq undo-limit 3600)
 
 (setq-default indent-tabs-mode nil)
 
@@ -242,7 +243,7 @@
 (global-set-key (kbd "M-X") 'smex-major-mode-commands)
 
                                         ; auto-complete
-(ac-config-default)
+;(ac-config-default)
 
 
                                         ; indentation and buffer clenaup
@@ -289,10 +290,6 @@
                     (set-variable 'js2-basic-offset 2))))
 
 
-                                        ; ace-jump-mode
-(define-key global-map (kbd "C-c SPC") 'ace-jump-mode)
-
-
                                         ; neotree
 (global-set-key [f8] 'neotree-toggle)
 
@@ -302,8 +299,6 @@
                                         ; projectile-rails
 (add-hook 'projectile-mode-hook 'projectile-rails-on)
 
-                                        ; org-drill
-(require 'org-drill)
 
                                         ; markdown
 
@@ -336,17 +331,45 @@
    (quote
     ("~/Dropbox/org/personal.org" "~/Dropbox/org/groupon.org"))))
 
+
+;;; sierotki.el
+(require 'sierotki)
+(turn-on-tex-magic-space-in-tex-modes)
+
                                         ; AUCTeX
 (setq TeX-auto-save t)
 (setq TeX-parse-self t)
 (setq-default TeX-master nil)
 (add-hook 'LaTeX-mode-hook 'turn-on-reftex)
+(eval-after-load "tex"
+  '(add-to-list 'TeX-command-list
+                '("LuaLaTeX" "lualatex %s"
+                  TeX-run-command nil nil) t))
+
+
+                                        ; Skim.app
+
+(setq LaTeX-command "latex -synctex=1")
+
+(setq TeX-view-program-selection '((output-pdf "PDF Viewer")))
+(setq TeX-view-program-list
+      '(("PDF Viewer" "/Applications/Skim.app/Contents/SharedSupport/displayline -g -b %n %o %b")))
+
+
 
                                         ; yasnippet
 (setq yas/indent-line 'fixed)
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
+
+
+                                        ; expand-region
+(global-set-key (kbd "C-=") 'er/expand-region)
+
+
+; undo-tree
+;(global-undo-tree-mode 1)
+(defalias 'redo 'undo-tree-redo)
+(global-set-key (kbd "M-z") 'undo) ; 【Ctrl+z】
+(global-set-key (kbd "C-M-z") 'redo) ; 【Ctrl+Shift+z】;
+
+                                        ; smartparens
+(smartparens-global-mode t)
