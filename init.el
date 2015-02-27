@@ -1,3 +1,7 @@
+                                        ; custom set variables
+(custom-set-variables
+ '(coffee-tab-width 2))
+
 (setq user-full-name "Tomasz Mieloch")
 (setq user-mail-address "tomasz@mieloch.net")
 
@@ -18,8 +22,14 @@
 (setq package-archive-enable-alist '(("melpa" deft magit)))
 
 
-(defvar tm/packages '(auctex
+(defvar tm/packages '(ag
+                      auctex
                       auto-complete
+                      ample-theme
+                      bundler
+                      cider
+                      clojure-mode
+                      clojure-snippets
                       coffee-mode
                       color-theme-solarized
                       emmet-mode
@@ -42,6 +52,7 @@
                       rvm
                       slim-mode
                       smartparens
+                      smart-mode-line
                       smex
                       undo-tree
                       yaml-mode
@@ -72,7 +83,11 @@
       mac-option-modifier 'none
       default-input-method "MacOSX")
 
-(load-theme 'solarized t)
+(load-theme 'leuven t)
+;(load-theme 'ample t)
+;(enable-theme 'ample)
+
+(global-hl-line-mode 1)
 
 (tool-bar-mode -1)
 
@@ -185,6 +200,7 @@
 (add-hook 'ruby-mode-hook
           '(lambda ()
              (define-key ruby-mode-map (kbd "RET") 'reindent-then-newline-and-indent)
+             (rvm-activate-corresponding-ruby)
              (electric-indent-mode)))
 
 ;; Rake files are ruby, too, as are gemspecs, rackup files, etc.
@@ -195,6 +211,21 @@
 (add-to-list 'auto-mode-alist '("Gemfile$" . ruby-mode))
 (add-to-list 'auto-mode-alist '("Capfile$" . ruby-mode))
 (add-to-list 'auto-mode-alist '("Vagrantfile$" . ruby-mode))
+
+;; string interpolation
+(defun tm-ruby-interpolate ()
+  "In a double quoted string, interpolate."
+  (interactive)
+  (insert "#")
+  (when (and
+         (looking-back "\".*")
+         (looking-at ".*\""))
+    (insert "{}")
+    (backward-char 1)))
+
+(eval-after-load 'ruby-mode
+  '(progn
+     (define-key ruby-mode-map (kbd "#") 'tm-ruby-interpolate)))
 
 ;;;Textmate like Command-RET
 (defun tm-mate-command-return ()
@@ -314,14 +345,6 @@
 ;;; git-gutter
 (global-git-gutter-mode +1)
 
-                                        ; custom set variables
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(coffee-tab-width 2))
-
 
 ;;; sierotki.el
 (require 'sierotki)
@@ -336,7 +359,10 @@
 (setq TeX-auto-save t)
 (setq TeX-parse-self t)
 (setq-default TeX-master nil)
+(add-hook 'LaTeX-mode-hook 'Latex-math-mode)
 (add-hook 'LaTeX-mode-hook 'turn-on-reftex)
+(setq reftex-plug-into-AUCTeX t)
+(setq TeX-PDF-mode t)
 (eval-after-load "tex"
   '(add-to-list 'TeX-command-list
                 '("LuaLaTeX" "lualatex %s"
@@ -344,7 +370,16 @@
 
 
 ;;; Skim.app
-(setq LaTeX-command "latex -synctex=1")
+(setq LaTeX-command "lualatex -synctex=1")
+
+
+(add-hook 'LaTeX-mode-hook (lambda ()
+  (push
+    '("latexmk" "latexmk -pdf %s" TeX-run-TeX nil t
+      :help "Run latexmk on file")
+    TeX-command-list)))
+(add-hook 'TeX-mode-hook '(lambda () (setq TeX-command-default "latexmk")))
+
 
 (setq TeX-view-program-selection '((output-pdf "PDF Viewer")))
 (setq TeX-view-program-list
@@ -362,9 +397,22 @@
 
 ;;; undo-tree
 ;(global-undo-tree-mode 1)
-(defalias 'redo 'undo-tree-redo)
-(global-set-key (kbd "M-z") 'undo) ; 【Ctrl+z】
-(global-set-key (kbd "C-M-z") 'redo) ; 【Ctrl+Shift+z】;
+;(defalias 'redo 'undo-tree-redo)
+;(global-set-key (kbd "M-z") 'undo) ; 【Ctrl+z】
+;(global-set-key (kbd "C-M-z") 'redo) ; 【Ctrl+Shift+z】;
 
-                                        ; smartparens
+;;; smartparens
 (smartparens-global-mode t)
+
+;;; re-builder
+(setq reb-re-syntax 'string)
+
+;;; smart-mode-line
+(sml/setup)
+(sml/apply-theme 'light)
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
